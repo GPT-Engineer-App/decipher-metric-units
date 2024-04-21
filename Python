@@ -1,0 +1,34 @@
+def decode_unit(unit):
+    prefixes = {
+        'tera': 12, 'giga': 9, 'mega': 6, 'kilo': 3,
+        'deci': -1, 'centi': -2, 'milli': -3,
+        'micro': -6, 'nano': -9
+    }
+    
+    # Визначаємо базову одиницю виміру та її ступінь
+    if 'meter^3' in unit:
+        base_unit = 'meter^3'
+        exponent_multiplier = 3
+    elif 'meter^2' in unit:
+        base_unit = 'meter^2'
+        exponent_multiplier = 2
+    else:
+        base_unit = 'meter'
+        exponent_multiplier = 1
+    
+    # Видаляємо базову одиницю виміру з рядка
+    unit = unit.replace(base_unit, '')
+    
+    # Обчислюємо сумарний ступінь десятки
+    total_exponent = 0
+    for prefix, value in prefixes.items():
+        if prefix in unit:
+            total_exponent += value
+            unit = unit.replace(prefix, '')
+    
+    # Повертаємо результат, помножений на ступінь одиниці виміру
+    return total_exponent * exponent_multiplier
+
+# Приклади використання
+print(decode_unit('kilometer'))  # Виведе: 3
+print(decode_unit('millimeter^3'))  # Виведе: -9
